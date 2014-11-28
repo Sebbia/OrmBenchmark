@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="app_name">OrmBenchmark</string>
+    <string name="idle">Idle</string>
+    <string name="start">Start</string>
+    <string name="running">Executing %1$s…</string>
+    <string name="save_entities">Save entities</string>
+    <string name="load_entities">Load entities</string>
+    <string name="save_entities_in_transaction">Save entities in transaction</string>
+    <string name="load_entity_by_id">Load entity by id</string>
+    <string name="results">Results:</string>
+</resources>
