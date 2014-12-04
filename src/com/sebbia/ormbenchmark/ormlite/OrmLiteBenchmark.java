@@ -4,11 +4,26 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import android.content.Context;
+
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.misc.TransactionManager;
 import com.sebbia.ormbenchmark.Benchmark;
 
 public class OrmLiteBenchmark extends Benchmark<OrmLiteEntity> {
+	
+	@Override
+	public void init(Context context) {
+		super.init(context);
+		context.deleteDatabase("ormlite");
+		DatabaseHelper.getInstance();
+	}
+	
+	@Override
+	public void dispose(Context context) {
+		super.dispose(context);
+		context.deleteDatabase("ormlite");
+	}
 
 	@Override
 	public void saveEntities(final List<OrmLiteEntity> entities) {
@@ -53,15 +68,15 @@ public class OrmLiteBenchmark extends Benchmark<OrmLiteEntity> {
 	}
 
 	@Override
-	public int loadEntities() {
+	public List<OrmLiteEntity> loadEntities() {
 		Dao<OrmLiteEntity, Long> dao = DatabaseHelper.getInstance().getDao(OrmLiteEntity.class);
 		try {
 			List<OrmLiteEntity> entities = dao.queryForAll();
-			return entities.size();
+			return entities;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return 0;
 		}
+		return null;
 	}
 
 	@Override

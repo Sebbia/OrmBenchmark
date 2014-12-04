@@ -10,6 +10,7 @@ import android.support.v4.util.TimeUtils;
 public class TimeMeasure {
 	private long start;
 	private long stop;
+	private long msec;
 	private int actionRes;
 	private String result;
 	
@@ -20,10 +21,10 @@ public class TimeMeasure {
 	
 	public TimeMeasure end() {
 		this.stop = System.nanoTime();
+		this.msec = TimeUnit.MILLISECONDS.convert(getNanoseconds(), TimeUnit.NANOSECONDS);
 		
 		StringBuilder stringBuilder = new StringBuilder();
-		
-		TimeUtils.formatDuration(TimeUnit.MILLISECONDS.convert(getNanoseconds(), TimeUnit.NANOSECONDS), stringBuilder);
+		TimeUtils.formatDuration(msec, stringBuilder);
 		this.result = stringBuilder.toString();
 		
 		Log.i(BenchmarkApp.getInstance().getString(actionRes) + " took " + result + " " + getNanoseconds() + " nanoseconds.");
@@ -40,5 +41,9 @@ public class TimeMeasure {
 	
 	public long getNanoseconds() {
 		return stop - start;
+	}
+	
+	public long getMsec() {
+		return msec;
 	}
 }

@@ -12,11 +12,11 @@ public abstract class Benchmark<T extends BenchmarkEntity> {
 
 	public abstract void saveEntities(List<T> entities);
 	public abstract void saveEntitiesInTransaction(List<T> entities);
-	public abstract int loadEntities();
+	public abstract List<T> loadEntities();
 	public abstract boolean findEntityWithId(long id);
 	public abstract void clearCache();
 	public abstract String getName();
-	public abstract Class<? extends T> getEntityClass();
+	public abstract Class<?  extends T> getEntityClass();
 	
 	public void init(Context context) {}
 	public void dispose(Context context) {}
@@ -24,12 +24,16 @@ public abstract class Benchmark<T extends BenchmarkEntity> {
 	List<T> generateEntities(int count) {
 		try {
 			List<T> entities = new ArrayList<T>();
+			Date date = new Date();
+			Blob blob = new Blob();
+			String field1 = Utils.getRandomString(100);
+			String field2 = Utils.getRandomString(100);
 			for (int i = 0; i < count; ++i) {
 				T benchmarkEntity = getEntityClass().newInstance();
-				benchmarkEntity.setField1(Utils.getRandomString(100));
-				benchmarkEntity.setField2(Utils.getRandomString(100));
-				benchmarkEntity.setDate(new Date(System.currentTimeMillis() + count * 100));
-				benchmarkEntity.setBlob(new Blob());
+				benchmarkEntity.setField1(field1);
+				benchmarkEntity.setField2(field2);
+				benchmarkEntity.setBlob(blob);
+				benchmarkEntity.setDate(date);
 				entities.add(benchmarkEntity);
 			}
 			return entities;

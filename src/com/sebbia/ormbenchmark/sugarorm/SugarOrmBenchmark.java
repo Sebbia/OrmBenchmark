@@ -1,6 +1,5 @@
 package com.sebbia.ormbenchmark.sugarorm;
 
-import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
@@ -15,6 +14,7 @@ public class SugarOrmBenchmark extends Benchmark<SugarOrmEntity> {
 	@Override
 	public void init(Context context) {
 		super.init(context);
+		context.deleteDatabase("sugarorm.db");
 		SugarContext.init(context);
 	}
 	
@@ -37,14 +37,9 @@ public class SugarOrmBenchmark extends Benchmark<SugarOrmEntity> {
 	}
 
 	@Override
-	public int loadEntities() {
-		Iterator<SugarOrmEntity> iterator = SugarRecord.findAll(SugarOrmEntity.class);
-		int count = 0;
-		while (iterator.hasNext()) {
-			iterator.next().getBlob();
-			count++;
-		}
-		return count;
+	public List<SugarOrmEntity> loadEntities() {
+		List<SugarOrmEntity> entities = SugarRecord.listAll(SugarOrmEntity.class);
+		return entities;
 	}
 
 	@Override

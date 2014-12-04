@@ -10,6 +10,7 @@ import com.activeandroid.Configuration;
 import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.sebbia.ormbenchmark.Benchmark;
+import com.sebbia.ormbenchmark.sugarorm.SugarOrmEntity;
 
 public class ActiveAndroidBenchmark extends Benchmark<ActiveAndroidEntity> {
 	
@@ -17,8 +18,9 @@ public class ActiveAndroidBenchmark extends Benchmark<ActiveAndroidEntity> {
 	public void init(Context context) {
 		Configuration configuration = new Configuration.Builder(context)
 		.setDatabaseName("activeandroid")
-		.addTypeSerializer(BlobSerializer.class)
+		.addTypeSerializer(BlobTypeSerializer.class)
 		.create();
+		
 		ActiveAndroid.initialize(configuration);
 	}
 	
@@ -48,9 +50,8 @@ public class ActiveAndroidBenchmark extends Benchmark<ActiveAndroidEntity> {
 	}
 
 	@Override
-	public int loadEntities() {
-		List<ActiveAndroidEntity> entities = new Select().from(ActiveAndroidEntity.class).execute();
-		return entities.size();
+	public List<ActiveAndroidEntity> loadEntities() {
+		return new Select().from(ActiveAndroidEntity.class).execute();
 	}
 
 	@Override

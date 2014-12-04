@@ -9,4 +9,6 @@
     <string name="save_entities_in_transaction">Save entities in transaction</string>
     <string name="load_entity_by_id">Load entity by id</string>
     <string name="results">Results:</string>
+    <string name="csv_was_generated">CSV file was generated at %1$s</string>
+    <string name="failed_to_generate_csv">Failed to generate CSV file: %1$s</string>
 </resources>

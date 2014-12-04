@@ -1,15 +1,19 @@
 package com.sebbia.ormbenchmark;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sebbia.ormbenchmark.BenchmarkExecutor.BenchmarkExecutorListener;
 import com.sebbia.ormbenchmark.utils.TimeMeasure;
@@ -60,6 +64,17 @@ public class BenchmarkActivity extends Activity implements BenchmarkExecutorList
 		if (executor.getResults().size() == BenchmarkExecutor.BENCHMARKS.length) {
 			statusTextView.setText(R.string.idle);
 			startButton.setEnabled(true);
+			generateResults();
+		}
+	}
+	
+	private void generateResults() {
+		File file = new File(Environment.getExternalStorageDirectory(), "orm-benchmark.csv");
+		try {
+			executor.generateCSV(file);
+			Toast.makeText(this, getString(R.string.csv_was_generated, file.getAbsolutePath()), Toast.LENGTH_LONG).show();
+		} catch (IOException e) {
+			Toast.makeText(this, getString(R.string.failed_to_generate_csv, e.getMessage()), Toast.LENGTH_LONG).show();
 		}
 	}
 	
