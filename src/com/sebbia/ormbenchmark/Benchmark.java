@@ -10,10 +10,8 @@ import com.sebbia.ormbenchmark.utils.Utils;
 
 public abstract class Benchmark<T extends BenchmarkEntity> {
 
-	public abstract void saveEntities(List<T> entities);
 	public abstract void saveEntitiesInTransaction(List<T> entities);
 	public abstract List<T> loadEntities();
-	public abstract boolean findEntityWithId(long id);
 	public abstract void clearCache();
 	public abstract String getName();
 	public abstract Class<?  extends T> getEntityClass();

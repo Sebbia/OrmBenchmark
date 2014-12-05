@@ -22,26 +22,8 @@ public class OrmLiteBenchmark extends Benchmark<OrmLiteEntity> {
 	@Override
 	public void dispose(Context context) {
 		super.dispose(context);
+		DatabaseHelper.dispose();
 		context.deleteDatabase("ormlite");
-	}
-
-	@Override
-	public void saveEntities(final List<OrmLiteEntity> entities) {
-		Dao<OrmLiteEntity, Long> dao = DatabaseHelper.getInstance().getDao(OrmLiteEntity.class);
-		
-		try {
-			dao.deleteBuilder().delete();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			for (OrmLiteEntity entity : entities) {
-				dao.create(entity);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -49,8 +31,6 @@ public class OrmLiteBenchmark extends Benchmark<OrmLiteEntity> {
 		final Dao<OrmLiteEntity, Long> dao = DatabaseHelper.getInstance().getDao(OrmLiteEntity.class);
 		
 		try {
-			dao.deleteBuilder().delete();
-		
 			TransactionManager.callInTransaction(DatabaseHelper.getInstance().getConnectionSource(), new Callable<Void>() {
 	
 				@Override
@@ -79,18 +59,6 @@ public class OrmLiteBenchmark extends Benchmark<OrmLiteEntity> {
 		return null;
 	}
 
-	@Override
-	public boolean findEntityWithId(long id) {
-		Dao<OrmLiteEntity, Long> dao = DatabaseHelper.getInstance().getDao(OrmLiteEntity.class);
-		try {
-			OrmLiteEntity entity = dao.queryForId(id);
-			return entity != null;
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
 	@Override
 	public void clearCache() {
 		Dao<OrmLiteEntity, Long> dao = DatabaseHelper.getInstance().getDao(OrmLiteEntity.class);

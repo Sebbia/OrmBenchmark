@@ -7,6 +7,7 @@ import com.activeandroid.sebbia.annotation.Column;
 import com.activeandroid.sebbia.annotation.Table;
 import com.sebbia.ormbenchmark.BenchmarkEntity;
 import com.sebbia.ormbenchmark.Blob;
+import com.sebbia.ormbenchmark.utils.Utils;
 
 @Table(name = "entity")
 public class ActiveAndroidSebbiaEntity extends Model implements BenchmarkEntity {
@@ -15,9 +16,11 @@ public class ActiveAndroidSebbiaEntity extends Model implements BenchmarkEntity 
 	@Column(name = "field2")
 	String field2;
 	@Column(name = "blob")
-	Blob blob;
+	byte[] blobArray;
 	@Column(name = "date")
 	Date date;
+	
+	private Blob blob;
 	
 	public ActiveAndroidSebbiaEntity() {
 
@@ -36,6 +39,7 @@ public class ActiveAndroidSebbiaEntity extends Model implements BenchmarkEntity 
 	@Override
 	public void setBlob(Blob blob) {
 		this.blob = blob;
+		this.blobArray = Utils.serialize(blob);
 	}
 
 	@Override
@@ -50,6 +54,8 @@ public class ActiveAndroidSebbiaEntity extends Model implements BenchmarkEntity 
 
 	@Override
 	public Blob getBlob() {
+		if (blob == null)
+			blob = Utils.deserialize(blobArray);
 		return blob;
 	}
 

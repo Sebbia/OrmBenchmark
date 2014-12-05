@@ -26,12 +26,6 @@ public class SugarOrmBenchmark extends Benchmark<SugarOrmEntity> {
 	}
 
 	@Override
-	public void saveEntities(List<SugarOrmEntity> entities) {
-		for (SugarOrmEntity entity : entities)
-			SugarRecord.save(entity);
-	}
-
-	@Override
 	public void saveEntitiesInTransaction(final List<SugarOrmEntity> entities) {
 		SugarRecord.saveInTx(entities);
 	}
@@ -40,12 +34,6 @@ public class SugarOrmBenchmark extends Benchmark<SugarOrmEntity> {
 	public List<SugarOrmEntity> loadEntities() {
 		List<SugarOrmEntity> entities = SugarRecord.listAll(SugarOrmEntity.class);
 		return entities;
-	}
-
-	@Override
-	public boolean findEntityWithId(long id) {
-		SugarOrmEntity entity = SugarRecord.findById(SugarOrmEntity.class, id);
-		return entity != null;
 	}
 
 	@Override

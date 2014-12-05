@@ -31,12 +31,6 @@ public class GreenDaoBenchmark extends Benchmark<GreenDaoEntity> {
 	}
 
 	@Override
-	public void saveEntities(List<GreenDaoEntity> entities) {
-		for (GreenDaoEntity entity : entities)
-			dao.insert(entity);
-	}
-
-	@Override
 	public void saveEntitiesInTransaction(final List<GreenDaoEntity> entities) {
 		dao.insertInTx(entities);;
 	}
@@ -44,11 +38,6 @@ public class GreenDaoBenchmark extends Benchmark<GreenDaoEntity> {
 	@Override
 	public List<GreenDaoEntity> loadEntities() {
 		return dao.loadAll();
-	}
-
-	@Override
-	public boolean findEntityWithId(long id) {
-		return dao.load(id) != null;
 	}
 
 	@Override

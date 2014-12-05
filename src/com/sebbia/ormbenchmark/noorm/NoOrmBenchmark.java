@@ -25,12 +25,6 @@ public class NoOrmBenchmark extends Benchmark<NoOrmEntity> {
 	}
 
 	@Override
-	public void saveEntities(List<NoOrmEntity> entities) {
-		for (NoOrmEntity entity : entities)
-			sqLiteHelper.insert(entity);
-	}
-
-	@Override
 	public void saveEntitiesInTransaction(List<NoOrmEntity> entities) {
 		sqLiteHelper.insertInTransaction(entities);
 	}
@@ -38,11 +32,6 @@ public class NoOrmBenchmark extends Benchmark<NoOrmEntity> {
 	@Override
 	public List<NoOrmEntity> loadEntities() {
 		return sqLiteHelper.getAllEntities();
-	}
-
-	@Override
-	public boolean findEntityWithId(long id) {
-		return sqLiteHelper.findEntity(id) == null;
 	}
 
 	@Override

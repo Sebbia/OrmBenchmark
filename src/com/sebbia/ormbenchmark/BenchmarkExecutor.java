@@ -13,8 +13,8 @@ import junit.framework.TestCase;
 import android.os.AsyncTask;
 
 import com.activeandroid.util.Log;
-import com.sebbia.ormbenchmark.activeandroid.ActiveAndroidBenchmark;
 import com.sebbia.ormbenchmark.activeandroid.sebbia.ActiveAndroidSebbiaBenchmark;
+import com.sebbia.ormbenchmark.activeandroid.ActiveAndroidBenchmark;
 import com.sebbia.ormbenchmark.greendao.GreenDaoBenchmark;
 import com.sebbia.ormbenchmark.noorm.NoOrmBenchmark;
 import com.sebbia.ormbenchmark.ormlite.OrmLiteBenchmark;
@@ -22,14 +22,14 @@ import com.sebbia.ormbenchmark.sugarorm.SugarOrmBenchmark;
 import com.sebbia.ormbenchmark.utils.TimeMeasure;
 
 public class BenchmarkExecutor {
-	
+
 	public static Benchmark<?>[] BENCHMARKS = {
-		new NoOrmBenchmark(),
-		new GreenDaoBenchmark(),
-		new OrmLiteBenchmark(), 
-		new ActiveAndroidBenchmark(),
-		new SugarOrmBenchmark(),
-		new ActiveAndroidSebbiaBenchmark()
+			new NoOrmBenchmark(),
+			new GreenDaoBenchmark(),
+			new OrmLiteBenchmark(),
+			new ActiveAndroidBenchmark(),
+			new SugarOrmBenchmark(),
+			new ActiveAndroidSebbiaBenchmark()
 	};
 
 	public interface BenchmarkExecutorListener {
@@ -38,9 +38,8 @@ public class BenchmarkExecutor {
 		public void onBenchmarkFinished(String name, List<TimeMeasure> results);
 	}
 
-	private static final String[] CSV_HEADER = {"Name", "Save in transaction", "Load"}; 
+	private static final String[] CSV_HEADER = { "Name", "Save in transaction", "Load" };
 	private static final int ENTITIES_COUNT = 1000;
-
 
 	private Map<String, List<TimeMeasure>> results;
 	private WeakReference<BenchmarkExecutorListener> listener;
@@ -55,7 +54,7 @@ public class BenchmarkExecutor {
 				for (Benchmark<? extends BenchmarkEntity> benchmark : BENCHMARKS) {
 					publishProgress(benchmark.getName());
 					benchmark.init(BenchmarkApp.getInstance());
-					
+
 					List<TimeMeasure> results = new ArrayList<TimeMeasure>();
 					List entities = benchmark.generateEntities(ENTITIES_COUNT);
 
@@ -67,6 +66,7 @@ public class BenchmarkExecutor {
 					TimeMeasure loadEntities = new TimeMeasure(R.string.load_entities);
 					entities = benchmark.loadEntities();
 					results.add(loadEntities.end());
+
 					TestCase.assertEquals(ENTITIES_COUNT, entities.size());
 					for (Object entity : entities) {
 						BenchmarkEntity benchmarkEntity = ((BenchmarkEntity) entity);
@@ -76,7 +76,7 @@ public class BenchmarkExecutor {
 						TestCase.assertEquals(100, benchmarkEntity.getBlob().getBackingArray().length);
 						TestCase.assertEquals(100, benchmarkEntity.getBlob().getField().length());
 					}
-						
+
 					benchmark.dispose(BenchmarkApp.getInstance());
 					BenchmarkExecutor.this.results.put(benchmark.getName(), results);
 					publishProgress(benchmark.getName());
@@ -97,25 +97,25 @@ public class BenchmarkExecutor {
 
 		}.execute();
 	}
-	
+
 	public void generateCSV(File file) throws IOException {
 		if (file.exists())
 			file.delete();
-		
+
 		if (file.getParentFile() != null)
 			file.getParentFile().mkdirs();
-		
+
 		StringBuilder stringBuilder = new StringBuilder();
 		for (int i = 0; i < CSV_HEADER.length; ++i)
 			stringBuilder.append(CSV_HEADER[i]).append(i == CSV_HEADER.length - 1 ? "\n" : ",");
-			
+
 		for (String key : results.keySet()) {
 			List<TimeMeasure> measures = results.get(key);
 			stringBuilder.append(key).append(",");
 			for (int i = 0; i < measures.size(); ++i)
 				stringBuilder.append(measures.get(i).getMsec()).append(i == measures.size() - 1 ? "\n" : ",");
 		}
-		
+
 		Log.i(stringBuilder.toString());
 
 		FileOutputStream outputStream = new FileOutputStream(file);
@@ -127,7 +127,7 @@ public class BenchmarkExecutor {
 	public void setBenchmarkExecutorListener(BenchmarkExecutorListener listener) {
 		this.listener = new WeakReference<BenchmarkExecutorListener>(listener);
 	}
-	
+
 	public Map<String, List<TimeMeasure>> getResults() {
 		return results;
 	}

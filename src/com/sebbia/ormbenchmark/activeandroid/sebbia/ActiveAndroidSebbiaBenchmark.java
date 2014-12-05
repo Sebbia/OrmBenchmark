@@ -7,7 +7,6 @@ import android.content.Context;
 import com.activeandroid.sebbia.ActiveAndroid;
 import com.activeandroid.sebbia.Cache;
 import com.activeandroid.sebbia.Configuration;
-import com.activeandroid.sebbia.Model;
 import com.activeandroid.sebbia.query.Select;
 import com.sebbia.ormbenchmark.Benchmark;
 
@@ -18,7 +17,6 @@ public class ActiveAndroidSebbiaBenchmark extends Benchmark<ActiveAndroidSebbiaE
 		context.deleteDatabase("activeandroid_sebbia");
 		Configuration configuration = new Configuration.Builder(context)
 		.setDatabaseName("activeandroid_sebbia")
-		.addTypeSerializer(BlobTypeSerializer.class)
 		.create();
 		ActiveAndroid.initialize(configuration);
 	}
@@ -31,17 +29,12 @@ public class ActiveAndroidSebbiaBenchmark extends Benchmark<ActiveAndroidSebbiaE
 	}
 
 	@Override
-	public void saveEntities(List<ActiveAndroidSebbiaEntity> entities) {
-		for (ActiveAndroidSebbiaEntity entity : entities) {
-			entity.save();
-		}
-	}
-
-	@Override
 	public void saveEntitiesInTransaction(List<ActiveAndroidSebbiaEntity> entities) {
 		try {
 			ActiveAndroid.getDatabase().beginTransaction();
-			Model.saveMultiple(entities);
+			for (ActiveAndroidSebbiaEntity entity : entities) {
+				entity.save();
+			}
 			ActiveAndroid.getDatabase().setTransactionSuccessful();
 		} finally {
 			ActiveAndroid.getDatabase().endTransaction();
@@ -51,11 +44,6 @@ public class ActiveAndroidSebbiaBenchmark extends Benchmark<ActiveAndroidSebbiaE
 	@Override
 	public List<ActiveAndroidSebbiaEntity> loadEntities() {
 		return new Select().from(ActiveAndroidSebbiaEntity.class).execute();
-	}
-
-	@Override
-	public boolean findEntityWithId(long id) {
-		return Model.load(ActiveAndroidSebbiaEntity.class, id) != null;
 	}
 
 	@Override

@@ -2,9 +2,9 @@ package com.sebbia.ormbenchmark.utils;
 
 import java.util.concurrent.TimeUnit;
 
-import com.sebbia.ormbenchmark.BenchmarkApp;
-
 import android.support.v4.util.TimeUtils;
+
+import com.sebbia.ormbenchmark.BenchmarkApp;
 
 
 public class TimeMeasure {

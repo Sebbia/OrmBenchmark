@@ -8,6 +8,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.sebbia.ormbenchmark.BenchmarkEntity;
 import com.sebbia.ormbenchmark.Blob;
+import com.sebbia.ormbenchmark.utils.Utils;
 
 @DatabaseTable(tableName = "entity")
 public class OrmLiteEntity implements BenchmarkEntity {
@@ -17,11 +18,12 @@ public class OrmLiteEntity implements BenchmarkEntity {
 	private String field1;
 	@DatabaseField(columnName = "field2")
 	private String field2;
-	@DatabaseField(columnName = "blob", dataType = DataType.SERIALIZABLE)
-	private Blob blob;
+	@DatabaseField(columnName = "blob", dataType = DataType.BYTE_ARRAY)
+	private byte[] blobArray;
 	@DatabaseField(columnName = "date", dataType = DataType.DATE)
 	private Date date;
 	
+	private Blob blob;
 
 	public OrmLiteEntity() {
 
@@ -40,6 +42,7 @@ public class OrmLiteEntity implements BenchmarkEntity {
 	@Override
 	public void setBlob(Blob blob) {
 		this.blob = blob;
+		this.blobArray = Utils.serialize(blob);
 	}
 
 	@Override
@@ -54,6 +57,8 @@ public class OrmLiteEntity implements BenchmarkEntity {
 
 	@Override
 	public Blob getBlob() {
+		if (blob == null)
+			blob = Utils.deserialize(blobArray);
 		return blob;
 	}
 

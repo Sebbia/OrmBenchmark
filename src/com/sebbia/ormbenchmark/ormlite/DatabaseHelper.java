@@ -19,6 +19,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 			instance = new DatabaseHelper();
 		return instance;
 	}
+	
+	public static void dispose() {
+		instance.close();
+		instance = null;
+	}
 
 	private DatabaseHelper() {
 		super(BenchmarkApp.getInstance(), "ormlite", null, 1);
@@ -47,7 +52,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public <D extends Dao<T, ?>, T> D getDao(Class<T> clazz) {
 		try {
 			D dao = super.getDao(clazz);
-//			dao.setObjectCache(true);
+			dao.setObjectCache(false);
 			return dao;
 		} catch (SQLException e) {
 			Log.e("Failed to get dao", e);
