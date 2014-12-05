@@ -46,4 +46,8 @@ public class TimeMeasure {
 	public long getMsec() {
 		return msec;
 	}
+	
+	public void setMsec(long msec) {
+		this.msec = msec;
+	}
 }

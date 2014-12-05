@@ -16,6 +16,7 @@ import com.activeandroid.util.Log;
 import com.sebbia.ormbenchmark.activeandroid.ActiveAndroidBenchmark;
 import com.sebbia.ormbenchmark.activeandroid.sebbia.ActiveAndroidSebbiaBenchmark;
 import com.sebbia.ormbenchmark.greendao.GreenDaoBenchmark;
+import com.sebbia.ormbenchmark.noorm.NoOrmBenchmark;
 import com.sebbia.ormbenchmark.ormlite.OrmLiteBenchmark;
 import com.sebbia.ormbenchmark.sugarorm.SugarOrmBenchmark;
 import com.sebbia.ormbenchmark.utils.TimeMeasure;
@@ -23,6 +24,7 @@ import com.sebbia.ormbenchmark.utils.TimeMeasure;
 public class BenchmarkExecutor {
 	
 	public static Benchmark<?>[] BENCHMARKS = {
+		new NoOrmBenchmark(),
 		new GreenDaoBenchmark(),
 		new OrmLiteBenchmark(), 
 		new ActiveAndroidBenchmark(),
