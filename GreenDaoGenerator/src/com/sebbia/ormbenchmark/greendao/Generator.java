@@ -16,7 +16,6 @@ public class Generator {
 		entity.addStringProperty("field2");
 		entity.addByteArrayProperty("blobArray");
 		entity.addDateProperty("date");
-		
 
 		new DaoGenerator().generateAll(schema, "../src-gen/");
 	}

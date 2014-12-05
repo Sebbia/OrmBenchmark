@@ -40,6 +40,7 @@ public class BenchmarkExecutor {
 
 	private static final String[] CSV_HEADER = { "Name", "Save in transaction", "Load" };
 	private static final int ENTITIES_COUNT = 1000;
+	private static final int PASSES = 10;
 
 	private Map<String, List<TimeMeasure>> results;
 	private WeakReference<BenchmarkExecutorListener> listener;
@@ -53,32 +54,38 @@ public class BenchmarkExecutor {
 			protected Void doInBackground(Void... params) {
 				for (Benchmark<? extends BenchmarkEntity> benchmark : BENCHMARKS) {
 					publishProgress(benchmark.getName());
-					benchmark.init(BenchmarkApp.getInstance());
-
 					List<TimeMeasure> results = new ArrayList<TimeMeasure>();
-					List entities = benchmark.generateEntities(ENTITIES_COUNT);
-
-					TimeMeasure saveEntitiesInTransaction = new TimeMeasure(R.string.save_entities_in_transaction);
-					benchmark.saveEntitiesInTransaction(entities);
-					results.add(saveEntitiesInTransaction.end());
-
-					benchmark.clearCache();
-					TimeMeasure loadEntities = new TimeMeasure(R.string.load_entities);
-					entities = benchmark.loadEntities();
-					results.add(loadEntities.end());
-
-					TestCase.assertEquals(ENTITIES_COUNT, entities.size());
-					for (Object entity : entities) {
-						BenchmarkEntity benchmarkEntity = ((BenchmarkEntity) entity);
-						TestCase.assertEquals(100, benchmarkEntity.getField1().length());
-						TestCase.assertEquals(100, benchmarkEntity.getField2().length());
-						TestCase.assertNotNull(benchmarkEntity.getDate());
-						TestCase.assertEquals(100, benchmarkEntity.getBlob().getBackingArray().length);
-						TestCase.assertEquals(100, benchmarkEntity.getBlob().getField().length());
+					for (int i = 0; i < PASSES; ++i) {
+						benchmark.init(BenchmarkApp.getInstance());
+	
+						List entities = benchmark.generateEntities(ENTITIES_COUNT);
+	
+						TimeMeasure saveEntitiesInTransaction = new TimeMeasure(R.string.save_entities_in_transaction);
+						benchmark.saveEntitiesInTransaction(entities);
+						results.add(saveEntitiesInTransaction.end());
+	
+						benchmark.clearCache();
+						TimeMeasure loadEntities = new TimeMeasure(R.string.load_entities);
+						entities = benchmark.loadEntities();
+						results.add(loadEntities.end());
+	
+						TestCase.assertEquals(ENTITIES_COUNT, entities.size());
+						for (Object entity : entities) {
+							BenchmarkEntity benchmarkEntity = ((BenchmarkEntity) entity);
+							TestCase.assertEquals(100, benchmarkEntity.getField1().length());
+							TestCase.assertEquals(100, benchmarkEntity.getField2().length());
+							TestCase.assertNotNull(benchmarkEntity.getDate());
+							TestCase.assertEquals(100, benchmarkEntity.getBlob().getBackingArray().length);
+							TestCase.assertEquals(100, benchmarkEntity.getBlob().getField().length());
+						}
+	
+						benchmark.dispose(BenchmarkApp.getInstance());
 					}
-
-					benchmark.dispose(BenchmarkApp.getInstance());
-					BenchmarkExecutor.this.results.put(benchmark.getName(), results);
+					List<TimeMeasure> medianResults = new ArrayList<TimeMeasure>();
+					medianResults.add(new TimeMeasure(R.string.save_entities_in_transaction, results));
+					medianResults.add(new TimeMeasure(R.string.load_entities, results));
+					
+					BenchmarkExecutor.this.results.put(benchmark.getName(), medianResults);
 					publishProgress(benchmark.getName());
 				}
 				return null;
