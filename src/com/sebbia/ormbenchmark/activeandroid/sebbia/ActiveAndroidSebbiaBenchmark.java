@@ -7,6 +7,7 @@ import android.content.Context;
 import com.activeandroid.sebbia.ActiveAndroid;
 import com.activeandroid.sebbia.Cache;
 import com.activeandroid.sebbia.Configuration;
+import com.activeandroid.sebbia.Model;
 import com.activeandroid.sebbia.query.Select;
 import com.sebbia.ormbenchmark.Benchmark;
 
@@ -32,9 +33,7 @@ public class ActiveAndroidSebbiaBenchmark extends Benchmark<ActiveAndroidSebbiaE
 	public void saveEntitiesInTransaction(List<ActiveAndroidSebbiaEntity> entities) {
 		try {
 			ActiveAndroid.getDatabase().beginTransaction();
-			for (ActiveAndroidSebbiaEntity entity : entities) {
-				entity.save();
-			}
+			Model.saveMultiple(entities);
 			ActiveAndroid.getDatabase().setTransactionSuccessful();
 		} finally {
 			ActiveAndroid.getDatabase().endTransaction();
