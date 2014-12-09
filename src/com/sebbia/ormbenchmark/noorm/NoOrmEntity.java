@@ -27,6 +27,8 @@ public class NoOrmEntity implements BenchmarkEntity {
 	private byte[] blobArray;
 	private Blob blob;
 	private Date date;
+	
+	private int fieldsCount = 4;
 
 	public NoOrmEntity() {
 
@@ -80,6 +82,14 @@ public class NoOrmEntity implements BenchmarkEntity {
 		statement.bindString(2, field2);
 		statement.bindBlob(3, blobArray);
 		statement.bindLong(4, date.getTime());
+	}
+	
+	public void bindToMultipleStatement(SQLiteStatement statement, int j) {
+		int posInStatement = (j*fieldsCount);
+		statement.bindString(posInStatement+1, field1);
+		statement.bindString(posInStatement+2, field2);
+		statement.bindBlob(posInStatement+3, blobArray);
+		statement.bindLong(posInStatement+4, date.getTime());
 	}
 
 }
